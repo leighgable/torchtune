@@ -13,7 +13,7 @@ from ._model_builders import (  # noqa
     qlora_phi3_mini,
 )
 from ._position_embeddings import Phi3RotaryPositionalEmbeddings  # noqa
-from ._yarn_positional_embeddings import Phi3DynamicYaRNScaledRotaryEmbedding
+from torchtune.modules import Phi3DynamicYaRNScaledRotaryEmbedding
 from ._tokenizer import Phi3MiniTokenizer  # noqa
 
 __all__ = [

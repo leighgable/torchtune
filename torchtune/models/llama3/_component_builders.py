@@ -17,7 +17,7 @@ from torchtune.modules import (
     KVCache,
     RMSNorm,
     RotaryPositionalEmbeddings,
-    LlamaYarnDynamicYaRNScaledRotaryEmbedding,
+    LlamaDynamicYaRNScaledRotaryEmbedding,
     TransformerDecoder,
     TransformerDecoderLayer,
 )

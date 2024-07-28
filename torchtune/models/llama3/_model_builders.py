@@ -267,6 +267,15 @@ that LoRA is applied to are quantized per the QLoRA paper: https://arxiv.org/abs
 Please see `lora_llama3_8b` for full API arguments.
 """
 
+yarn_qlora_llama3_8b = partial(yarn_lora_llama3_8b, quantize_base=True)
+
+yarn_qlora_llama3_8b.__doc__ = """
+Builder for creating a Llama3 8B model with QLoRA and Dynamic Rope enabled. Base model weights in linear layers
+that LoRA is applied to are quantized per the QLoRA paper: https://arxiv.org/abs/2305.14314.
+Please see `yarn_lora_llama3_8b` for full API arguments.
+"""
+
+
 qlora_llama3_70b = partial(lora_llama3_70b, quantize_base=True)
 
 qlora_llama3_70b.__doc__ = """
