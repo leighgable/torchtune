@@ -13,6 +13,7 @@ from ._model_builders import (  # noqa
     qlora_phi3_mini,
 )
 from ._position_embeddings import Phi3RotaryPositionalEmbeddings  # noqa
+from ._yarn_positional_embeddings import Phi3DynamicYaRNScaledRotaryEmbedding
 from ._tokenizer import Phi3MiniTokenizer  # noqa
 
 __all__ = [
@@ -21,6 +22,7 @@ __all__ = [
     "lora_phi3_mini",
     "qlora_phi3_mini",
     "Phi3RotaryPositionalEmbeddings",
+    "Phi3DynamicYaRNScaledRotaryEmbedding",
     "Phi3MiniTokenizer",
     "phi3_hf_to_tune",
     "phi3_tune_to_hf",

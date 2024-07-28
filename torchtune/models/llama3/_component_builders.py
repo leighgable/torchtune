@@ -17,6 +17,7 @@ from torchtune.modules import (
     KVCache,
     RMSNorm,
     RotaryPositionalEmbeddings,
+    LlamaYarnDynamicYaRNScaledRotaryEmbedding,
     TransformerDecoder,
     TransformerDecoderLayer,
 )
@@ -51,6 +52,7 @@ def llama3(
     rope_base: int = 500000.0,
     intermediate_dim: Optional[int] = None,
     norm_eps: float = 1e-5,
+    dynamic_rope: bool = False,
 ) -> TransformerDecoder:
     """
     Build the decoder associated with the Llama3 model. This includes:
@@ -81,7 +83,10 @@ def llama3(
     """
     head_dim = embed_dim // num_heads
     num_kv_heads = num_kv_heads if num_kv_heads else num_heads
-    rope = RotaryPositionalEmbeddings(dim=head_dim, max_seq_len=max_seq_len, base=rope_base)
+    if self.dynamic_rope:
+        rope = LlamaDynamicYaRNScaledRotaryEmbedding(dim=head_dim, max_position_embeddings=max_seq_len, base=rope_base)
+    else:
+        rope = RotaryPositionalEmbeddings(dim=head_dim, max_seq_len=max_seq_len, base=rope_base)
     self_attn = CausalSelfAttention(
         embed_dim=embed_dim,
         num_heads=num_heads,
@@ -152,6 +157,7 @@ def lora_llama3(
     lora_dropout: float = 0.0,
     # Quantization args
     quantize_base: bool = False,
+    dynamic_rope: bool = False,
 ) -> TransformerDecoder:
     """
     Return a version of Llama3 (an instance of :func:`~torchtune.modules.TransformerDecoder`)
@@ -205,6 +211,7 @@ def lora_llama3(
         lora_alpha=lora_alpha,
         lora_dropout=lora_dropout,
         quantize_base=quantize_base,
+        dynamic_rope=dynamic_rope,
     )
 
     hidden_dim = intermediate_dim if intermediate_dim else scale_hidden_dim_for_mlp(embed_dim)
@@ -271,6 +278,7 @@ def lora_llama3_self_attention(
     lora_alpha: float,
     lora_dropout: float = 0.0,
     quantize_base: bool = False,
+    dynamic_rope: bool = False,
 ) -> CausalSelfAttention:
     """
     Return an instance of :func:`~torchtune.modules.CausalSelfAttention` with LoRA
@@ -358,7 +366,10 @@ def lora_llama3_self_attention(
         if "output_proj" in lora_modules
         else nn.Linear(embed_dim, embed_dim, bias=False)
     )
-    rope = RotaryPositionalEmbeddings(dim=head_dim, max_seq_len=max_seq_len, base=rope_base)
+    if self.dynamic_rope:
+        rope = LlamaDynamicYaRNScaledRotaryEmbedding(dim=head_dim, max_seq_len=max_seq_len, base=rope_base)
+    else:
+        rope = RotaryPositionalEmbeddings(dim=head_dim, max_seq_len=max_seq_len, base=rope_base)
     self_attn = CausalSelfAttention(
         embed_dim=embed_dim,
         num_heads=num_heads,

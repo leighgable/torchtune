@@ -11,6 +11,8 @@ from .kv_cache import KVCache  # noqa
 from .layer_norm import Fp32LayerNorm  # noqa
 from .lr_schedulers import get_cosine_schedule_with_warmup  # noqa
 from .position_embeddings import RotaryPositionalEmbeddings  # noqa
+from .yarn_position_embeddings import (LlamaDynamicYaRNScaledRotaryEmbedding,
+    Phi3DynamicYaRNScaledRotaryEmbedding)
 from .rms_norm import RMSNorm  # noqa
 from .transformer import TransformerDecoder, TransformerDecoderLayer  # noqa
 from .vision_transformer import VisionTransformer
@@ -21,6 +23,8 @@ __all__ = [
     "get_cosine_schedule_with_warmup",
     "KVCache",
     "RotaryPositionalEmbeddings",
+    "LlamaDynamicYaRNScaledRotaryEmbedding",
+    "Phi3DynamicYaRNScaledRotaryEmbedding",
     "RMSNorm",
     "Fp32LayerNorm",
     "VisionTransformer",
