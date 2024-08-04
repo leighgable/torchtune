@@ -14,6 +14,7 @@ from torchtune.modules import (
     CausalSelfAttention,
     FeedForward,
     RMSNorm,
+    Phi3DynamicYaRNScaledRotaryEmbedding,
     RotaryPositionalEmbeddings,
     TransformerDecoder,
     TransformerDecoderLayer,
@@ -46,6 +47,7 @@ def phi3(
     attn_dropout: float = 0.0,
     norm_eps: float = 1e-5,
     rope_base: int = 10_000,
+    dynamic_rope: bool = False,
 ) -> TransformerDecoder:
     """
     Args:
@@ -70,7 +72,10 @@ def phi3(
     head_dim = embed_dim // num_heads
     num_kv_heads = num_kv_heads if num_kv_heads else num_heads
 
-    rope = Phi3RotaryPositionalEmbeddings(dim=head_dim, max_seq_len=max_seq_len, base=rope_base)
+    if dynamic_rope:
+        rope = Phi3DynamicYaRNScaledRotaryEmbedding(dim=head_dim, max_position_embeddings=max_seq_len, base=rope_base)
+    else:
+        rope = Phi3RotaryPositionalEmbeddings(dim=head_dim, max_seq_len=max_seq_len, base=rope_base)
     self_attn = CausalSelfAttention(
         embed_dim=embed_dim,
         num_heads=num_heads,
@@ -140,6 +145,7 @@ def lora_phi3(
     lora_dropout: float = 0.0,
     # Quantization args
     quantize_base: bool = False,
+    dynamic_rope: bool = False,
 ) -> TransformerDecoder:
     """
     Return a version of Phi3 (an instance of :func:`~torchtune.modules.TransformerDecoder`)
@@ -194,6 +200,7 @@ def lora_phi3(
         lora_alpha=lora_alpha,
         lora_dropout=lora_dropout,
         quantize_base=quantize_base,
+        dynamic_rope=dynamic_rope,
     )
 
     if apply_lora_to_mlp:
@@ -261,6 +268,7 @@ def lora_phi3_self_attention(
     lora_alpha: float,
     lora_dropout: float = 0.0,
     quantize_base: bool = False,
+    dynamic_rope: bool = False,
 ) -> CausalSelfAttention:
     """
     Return an instance of :func:`~torchtune.modules.CausalSelfAttention` with LoRA
@@ -350,7 +358,10 @@ def lora_phi3_self_attention(
         if "output_proj" in lora_modules
         else nn.Linear(embed_dim, embed_dim, bias=False)
     )
-    rope = Phi3RotaryPositionalEmbeddings(dim=head_dim, max_seq_len=max_seq_len, base=rope_base)
+    if dynamic_rope:
+        rope = Phi3DynamicYaRNScaledRotaryEmbedding(dim=head_dim, max_position_embeddings=max_seq_len, base=rope_base)
+    else:
+        rope = Phi3RotaryPositionalEmbeddings(dim=head_dim, max_seq_len=max_seq_len, base=rope_base)
     self_attn = CausalSelfAttention(
         embed_dim=embed_dim,
         num_heads=num_heads,

@@ -83,7 +83,7 @@ def llama3(
     """
     head_dim = embed_dim // num_heads
     num_kv_heads = num_kv_heads if num_kv_heads else num_heads
-    if self.dynamic_rope:
+    if dynamic_rope:
         rope = LlamaDynamicYaRNScaledRotaryEmbedding(dim=head_dim, max_position_embeddings=max_seq_len, base=rope_base)
     else:
         rope = RotaryPositionalEmbeddings(dim=head_dim, max_seq_len=max_seq_len, base=rope_base)
@@ -366,7 +366,7 @@ def lora_llama3_self_attention(
         if "output_proj" in lora_modules
         else nn.Linear(embed_dim, embed_dim, bias=False)
     )
-    if self.dynamic_rope:
+    if dynamic_rope:
         rope = LlamaDynamicYaRNScaledRotaryEmbedding(dim=head_dim, max_seq_len=max_seq_len, base=rope_base)
     else:
         rope = RotaryPositionalEmbeddings(dim=head_dim, max_seq_len=max_seq_len, base=rope_base)

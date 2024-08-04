@@ -11,6 +11,9 @@ from ._model_builders import (  # noqa
     phi3_mini,
     phi3_mini_tokenizer,
     qlora_phi3_mini,
+    phi3_mini_yarn,
+    lora_phi3_mini,
+    qlora_phi3_mini_yarn,
 )
 from ._position_embeddings import Phi3RotaryPositionalEmbeddings  # noqa
 from torchtune.modules import Phi3DynamicYaRNScaledRotaryEmbedding
@@ -21,6 +24,9 @@ __all__ = [
     "phi3_mini_tokenizer",
     "lora_phi3_mini",
     "qlora_phi3_mini",
+    "phi3_mini_yarn",
+    "lora_phi3_mini_yarn",
+    "qlora_phi3_mini_yarn",
     "Phi3RotaryPositionalEmbeddings",
     "Phi3DynamicYaRNScaledRotaryEmbedding",
     "Phi3MiniTokenizer",
